@@ -3,7 +3,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 const http = require('http');
 
-const {generateMessage} = require('./utils/message');
+const {generateMessage,generateLocationMessage} = require('./utils/message');
 
 var app = express();
 
@@ -17,7 +17,7 @@ var io =socketIO(server);
 io.on('connection',(socket)=>{
   console.log('new user connected');
 
-  socket.emit('welcome',generateMessage('Admin','Welcome to the chat app'));
+  socket.emit('newMessage',generateMessage('Admin','Welcome to the chat app'));
 
   socket.broadcast.emit('newUserJoined',generateMessage('Admin','New user joined'));
 
@@ -25,9 +25,12 @@ io.on('connection',(socket)=>{
 socket.on('createMessage',(msgBody,callback)=>{
   console.log('Message Body:',msgBody);
   io.emit('newMessage',generateMessage(msgBody.from,msgBody.text));
-  callback('This is from server');
+  callback();
 });
 
+socket.on('createLocationMessage',(coords)=>{
+  io.emit('newLocationMessage',generateLocationMessage('Admin',`${coords.latitude}`,`${coords.longitude}`));
+});
 
 socket.on('disconnect',()=>{
   console.log('user was disconnected');
