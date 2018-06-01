@@ -22,9 +22,10 @@ io.on('connection',(socket)=>{
   socket.broadcast.emit('newUserJoined',generateMessage('Admin','New user joined'));
 
 
-socket.on('createMessage',(msgBody)=>{
+socket.on('createMessage',(msgBody,callback)=>{
   console.log('Message Body:',msgBody);
   io.emit('newMessage',generateMessage(msgBody.from,msgBody.text));
+  callback('This is from server');
 });
 
 
