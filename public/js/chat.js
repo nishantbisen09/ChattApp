@@ -76,10 +76,6 @@ socket.on('newMessage',function(message){
 
 
 
-socket.on('newUserJoined',function(adminMessage){
-  console.log('Message from admin:',adminMessage);
-});
-
 // socket.emit('createMessage',{
 //   from:'Nishant',
 //   text:'Hiiiii'
@@ -91,7 +87,6 @@ jQuery('#message-form').on('submit',function(e) {
   e.preventDefault();
   var messageTextbox = jQuery('[name=message]');
   socket.emit('createMessage',{
-    from:'Nishant',
     text: messageTextbox.val()
   },function() {
     messageTextbox.val('');
