@@ -26,6 +26,11 @@ class Users{
     return namesArray;
   }
 
+  unique (params) {
+    var allUsers = this.getUserList(params.room);
+    return allUsers.filter((user) => user === params.name);
+  }
+
 }
 
 module.exports = {Users};

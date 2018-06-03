@@ -2,9 +2,10 @@ const path = require('path');
 const express = require('express');
 const socketIO = require('socket.io');
 const http = require('http');
+const _ = require('lodash');
 
 const {generateMessage,generateLocationMessage} = require('./utils/message');
-const {isString} = require('./utils/validation');
+const {isString,unique} = require('./utils/validation');
 const {Users} = require('./utils/users');
 
 var app = express();
@@ -20,15 +21,38 @@ io.on('connection',(socket)=>{
   console.log('new user connected');
 
   socket.on('join',(params,callback)=>{
+    params = {name:params.name,room:params.room.toLowerCase()};
     if (!isString(params.name) || !isString(params.room)) {
       return callback('Valid name and room name required');
     }
+    else if (!(_.isEmpty(users.unique(params)))) {
+      return callback('username taken');
+    }
+
+
+    // var  findRooms = () => {
+    // var availableRooms = [];
+    // var rooms = io.sockets.adapter.rooms;
+    // if (rooms) {
+    //     for (var room in rooms) {
+    //         if (!rooms[room].hasOwnProperty(room)) {
+    //             availableRooms.push(room);
+    //         }
+    //     }
+    // }
+    //
+    // return availableRooms;
+    //
+    // }
+    // console.log(findRooms());
+    //
+    // socket.emit('rooms',findRooms());
 
 
     socket.join(params.room);
     users.removeUser(socket.id);
     users.addUser(socket.id,params.name,params.room);
-    console.log(users.getUserList(params.room));
+
     io.to(params.room).emit('updateUsers',users.getUserList(params.room));
     socket.emit('newMessage',generateMessage('Admin','Welcome to the chat app'));
     socket.broadcast.to(params.room).emit('newMessage',generateMessage('Admin',`${params.name} has joined`));
@@ -60,6 +84,9 @@ socket.on('disconnect',() => {
   }
 
 });
+
+
+
 });
 
 app.use(express.static(publicPath));
