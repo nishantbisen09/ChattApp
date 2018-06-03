@@ -37,19 +37,7 @@ socket.on('updateUsers',function(users){
   jQuery('#users').html(ol);
 });
 
-// socket.on('rooms',function (rooms) {
-//     console.log(rooms);
-//     var select = jQuery('<option></option>');
-//     if (rooms) {
-//       rooms.forEach(function (room) {
-//         select.text(room);
-//       });
-//     }
-//
-//
-//     jQuery('#room_id').append(select);
-//
-// });
+
 
 
 socket.on('disconnect',function (){

@@ -29,26 +29,6 @@ io.on('connection',(socket)=>{
       return callback('username taken');
     }
 
-
-    // var  findRooms = () => {
-    // var availableRooms = [];
-    // var rooms = io.sockets.adapter.rooms;
-    // if (rooms) {
-    //     for (var room in rooms) {
-    //         if (!rooms[room].hasOwnProperty(room)) {
-    //             availableRooms.push(room);
-    //         }
-    //     }
-    // }
-    //
-    // return availableRooms;
-    //
-    // }
-    // console.log(findRooms());
-    //
-    // socket.emit('rooms',findRooms());
-
-
     socket.join(params.room);
     users.removeUser(socket.id);
     users.addUser(socket.id,params.name,params.room);
